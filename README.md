@@ -1,2 +1,0 @@
-# litebrite
-My Compiler Frontend
