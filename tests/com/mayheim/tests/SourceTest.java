@@ -1,6 +1,6 @@
 package com.mayheim.tests;
 
-import com.mayheim.base.frontend.SourceReader;
+import com.mayheim.base.frontend.Source;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,26 +8,26 @@ import java.io.StringReader;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SourceReaderTest {
+class SourceTest {
     @org.junit.jupiter.api.Test
     void readFileWithContents() {
         String sourceFile = "ab\nc\n\0";
         BufferedReader reader = getReaderForTest(sourceFile);
         try {
             //current char will read the entire file one character one char at a time
-            SourceReader sourceReader = new SourceReader(reader);
-            char currentChar = sourceReader.currentChar();//gets first char
+            Source source = new Source(reader);
+            char currentChar = source.currentChar();//gets first char
             assertEquals(currentChar,'a');
-            currentChar = sourceReader.nextChar();//reads next char
+            currentChar = source.nextChar();//reads next char
             assertEquals(currentChar,'b');
-            currentChar = sourceReader.nextChar();//end of line
-            assertEquals(currentChar, SourceReader.EOL);
-            currentChar = sourceReader.nextChar();//and the next char
+            currentChar = source.nextChar();//end of line
+            assertEquals(currentChar, Source.EOL);
+            currentChar = source.nextChar();//and the next char
             assertEquals(currentChar,'c');
-            currentChar = sourceReader.nextChar();//end of line
-            assertEquals(currentChar, SourceReader.EOL);
-            currentChar = sourceReader.nextChar();//should now reach the end of th file
-            assertEquals(currentChar, SourceReader.EOF);
+            currentChar = source.nextChar();//end of line
+            assertEquals(currentChar, Source.EOL);
+            currentChar = source.nextChar();//should now reach the end of th file
+            assertEquals(currentChar, Source.EOF);
 
         }catch (IOException error){
             //if this test ever throws an error we have a problem
@@ -44,14 +44,14 @@ class SourceReaderTest {
         BufferedReader reader = getReaderForTest(sourceFile);
         try {
             //current char will read the entire file one character one char at a time
-            SourceReader sourceReader = new SourceReader(reader);
-            char currentChar = sourceReader.currentChar();//gets first char
+            Source source = new Source(reader);
+            char currentChar = source.currentChar();//gets first char
             assertEquals(currentChar,'a');
-            currentChar = sourceReader.peekAhead();//reads next char
+            currentChar = source.peekAhead();//reads next char
             assertEquals(currentChar,'b');
-            currentChar = sourceReader.currentChar();//end of line
+            currentChar = source.currentChar();//end of line
             assertEquals(currentChar,'a');
-            currentChar = sourceReader.nextChar();//and the next char
+            currentChar = source.nextChar();//and the next char
             assertEquals(currentChar,'b');
 
         }catch (IOException error){
@@ -69,8 +69,8 @@ class SourceReaderTest {
         BufferedReader reader = getReaderForTest(sourceFile);
         try {
             //current char will read the entire file one character one char at a time
-            SourceReader sourceReader = new SourceReader(reader);
-            sourceReader.close();
+            Source source = new Source(reader);
+            source.close();
             assertNotNull("As long as we do not throw an exception, close is working");
         }catch (IOException error){
             //if this test ever throws an error we have a problem

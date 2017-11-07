@@ -3,7 +3,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.Buffer;
 
-public class SourceReader {
+public class Source {
     public static final char EOL = '\n'; //end of line character
     public static final char EOF = (char) 0; //end of file character
 
@@ -18,7 +18,7 @@ public class SourceReader {
      * @throws IOException if an I/O error occured
      */
 
-    public SourceReader(BufferedReader reader)
+    public Source(BufferedReader reader)
         throws IOException{
         this.lineNum = 0;
         this.currentPos = -2; //set to -2 to read the first source line
@@ -113,4 +113,11 @@ public class SourceReader {
         }
     }
 
+    public int getLineNumber() {
+        return 0;
+    }
+
+    public int getPosition() {
+        return 0;
+    }
 }

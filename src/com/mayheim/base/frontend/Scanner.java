@@ -2,11 +2,11 @@ package com.mayheim.base.frontend;
 
 public abstract class Scanner {
 
-    protected SourceReader sourceReader;
+    protected Source source;
     private Token currentToken;
 
-    public Scanner(SourceReader sourceReader){
-        this.sourceReader = sourceReader;
+    public Scanner(Source source){
+        this.source = source;
     }
 
     public Token currentToken(){
@@ -40,7 +40,7 @@ public abstract class Scanner {
      */
     public char currentChar()
         throws Exception{
-        return sourceReader.currentChar();
+        return source.currentChar();
     }
 
     /**
@@ -48,7 +48,7 @@ public abstract class Scanner {
      */
     public char nextChar()
         throws Exception{
-        return sourceReader.nextChar();
+        return source.nextChar();
     }
 
 
