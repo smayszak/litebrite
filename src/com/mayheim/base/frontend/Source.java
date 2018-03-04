@@ -1,9 +1,10 @@
 package com.mayheim.base.frontend;
+import com.mayheim.base.message.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.Buffer;
 
-public class Source {
+public class Source implements MessageProducer{
     public static final char EOL = '\n'; //end of line character
     public static final char EOF = (char) 0; //end of file character
 
@@ -11,6 +12,7 @@ public class Source {
     private String line; //source line;
     private int lineNum; //current source line number
     private int currentPos; //current source line position;
+    private MessageHandler messageHandler;
 
     /**
      * Constructor
@@ -18,11 +20,12 @@ public class Source {
      * @throws IOException if an I/O error occured
      */
 
-    public Source(BufferedReader reader)
+    public Source(BufferedReader reader, MessageHandler messageHandler)
         throws IOException{
         this.lineNum = 0;
         this.currentPos = -2; //set to -2 to read the first source line
         this.reader = reader;
+        this.messageHandler = messageHandler;
     }
 
     /**
@@ -94,6 +97,10 @@ public class Source {
         if(line != null){
             ++lineNum;
         }
+
+        if(line != null){
+            sendMessage(new Message(MessageType.SOURCE_LINE, new Object[] {lineNum, line}));
+        }
     }
 
     /**
@@ -119,5 +126,20 @@ public class Source {
 
     public int getPosition() {
         return 0;
+    }
+
+    @Override
+    public void addMessageListener(MessageListener listener) {
+        messageHandler.addListener(listener);
+    }
+
+    @Override
+    public void removeMessageListener(MessageListener listener) {
+        messageHandler.removeListener(listener);
+    }
+
+    @Override
+    public void sendMessage(Message message) {
+        messageHandler.sendMessage(message);
     }
 }

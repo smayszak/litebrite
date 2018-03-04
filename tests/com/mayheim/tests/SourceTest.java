@@ -1,6 +1,7 @@
 package com.mayheim.tests;
 
 import com.mayheim.base.frontend.Source;
+import com.mayheim.base.message.MessageHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,10 +13,11 @@ class SourceTest {
     @org.junit.jupiter.api.Test
     void readFileWithContents() {
         String sourceFile = "ab\nc\n\0";
+        MessageHandler handler = new MessageHandler();
         BufferedReader reader = getReaderForTest(sourceFile);
         try {
             //current char will read the entire file one character one char at a time
-            Source source = new Source(reader);
+            Source source = new Source(reader, handler);
             char currentChar = source.currentChar();//gets first char
             assertEquals(currentChar,'a');
             currentChar = source.nextChar();//reads next char
@@ -41,10 +43,12 @@ class SourceTest {
     void peekChar() {
         //peek reads one past the current oine without advancing
         String sourceFile = "abc\0";
+        MessageHandler handler = new MessageHandler();
+
         BufferedReader reader = getReaderForTest(sourceFile);
         try {
             //current char will read the entire file one character one char at a time
-            Source source = new Source(reader);
+            Source source = new Source(reader, handler);
             char currentChar = source.currentChar();//gets first char
             assertEquals(currentChar,'a');
             currentChar = source.peekAhead();//reads next char
@@ -66,12 +70,34 @@ class SourceTest {
     @org.junit.jupiter.api.Test
     void close() {
         String sourceFile = "ab\nc\n\0";
+        MessageHandler handler = new MessageHandler();
         BufferedReader reader = getReaderForTest(sourceFile);
         try {
             //current char will read the entire file one character one char at a time
-            Source source = new Source(reader);
+            Source source = new Source(reader, handler);
             source.close();
             assertNotNull("As long as we do not throw an exception, close is working");
+        }catch (IOException error){
+            //if this test ever throws an error we have a problem
+            assertNull(error);
+        }catch (Exception error){
+            //if this test ever throws an error we have a problem
+            assertNull(error);
+        }
+    }
+
+    @org.junit.jupiter.api.Test
+    void validateMessageHandler() {
+        String sourceFile = "ab\nc\n\0";
+        MessageHandler handler = new MessageHandler();
+        BufferedReader reader = getReaderForTest(sourceFile);
+        try {
+            //current char will read the entire file one character one char at a time
+            Source source = new Source(reader, handler);
+            TestSourceMessageListener listener = new TestSourceMessageListener();
+            source.addMessageListener(listener);
+            source.currentChar();
+            assertNotNull(listener.LastMessage);
         }catch (IOException error){
             //if this test ever throws an error we have a problem
             assertNull(error);
